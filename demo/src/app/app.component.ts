@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import FroalaEditor from 'froala-editor';
-import 'froala-editor/js/languages/de.js';
-
-import 'froala-editor/js/languages/da.js';
 
 @Component({
   selector: 'app-demo',
@@ -16,8 +16,8 @@ import 'froala-editor/js/languages/da.js';
       id="froala-editor"
       [froalaEditor]="options"
       [(froalaModel)]="content"
-      formControlName="editor"
-    ></div>
+      formControlName="editor">
+    </div>
   </div> 
   <button type="submit" class="btn btn-primary">Submit</button>
 </form> 
@@ -26,51 +26,24 @@ import 'froala-editor/js/languages/da.js';
 export class AppComponent implements OnInit {
   campaignForm: FormGroup;
   public options = {
-    toolbarButtons: ['my_dropdown'],
-
-    /** Works Perfectly */
-    /*toolbarButtons: [
-      ['undo', 'redo', 'bold'],
-       ['h1', 'h2', 'insert'],
-       ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
-       ['insertLink', 'insertImage', 'insertTable', 'emoticons', 'specialCharacters', 'fontAwesome', 'embedly', 'insertHR'],
-       ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html'],
-       ],*/
+    htmlUntouched: false,
+    toolbarButtons: [['non_breacking_space', 'html']],
   };
 
   constructor(private formBuilder: FormBuilder) {}
   ngOnInit() {
-    FroalaEditor.DefineIcon('my_dropdown', {
-      NAME: 'cog',
+    FroalaEditor.DefineIcon('non_breacking_space', {
+      NAME: 'insertContent',
       SVG_KEY: 'cogs',
     });
-    FroalaEditor.RegisterCommand('my_dropdown', {
-      title: 'Advanced options',
-      type: 'dropdown',
-      focus: false,
-      undo: false,
+    FroalaEditor.RegisterCommand('non_breacking_space', {
+      title: 'Insert non-breackign space',
+      focus: true,
+      undo: true,
       refreshAfterCallback: true,
-      options: {
-        v1: 'German',
-        v2: 'Danish',
-      },
       callback: function (cmd, val) {
         console.log(val);
-        if (val == 'v1') {
-          this.destroy();
-          new FroalaEditor('div#froala-editor', {
-            toolbarButtons: ['bold', 'italic', 'formatBlock', 'my_dropdown'],
-            language: 'de',
-          });
-        }
-        if (val == 'v2') {
-          console.log('asdf');
-          this.destroy();
-          new FroalaEditor('div#froala-editor', {
-            toolbarButtons: ['bold', 'my_dropdown'],
-            language: 'da',
-          });
-        }
+        this.html.insert('&nbsp;');
       },
       // Callback on refresh.
       refresh: function ($btn) {
